@@ -22,6 +22,8 @@
         bool deleteAt(int position);
         T getData(int position);
         void clear();
+        void sort();
+        void duplicate();
           
   };
 
@@ -206,6 +208,13 @@
           ptr = NULL;
           ptr = ptr->next;
     }
+  }
+
+  template<class T>
+  void DoubleLinkedList<T>::duplicate() {
+      for (int i = 0; i < getNumElements(); i++) {
+        addLast(head<i>);
+      }
   }
   
 #endif // _DOUBLELINKEDLIST_H_
