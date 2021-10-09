@@ -3,7 +3,7 @@
 
   #include <climits>
   #include "Node.h"
-  #include "mergeSort.h"
+  #include "vector"
 
   template <class T>
   class DoubleLinkedList {
@@ -55,11 +55,12 @@
   }
  
   template<class T>
-  int DoubleLinkedList<T>::getNumElements() {
+  int DoubleLinkedList<T>::getNumElements() { // time complexity o(1)
     return numElements;
   }
+
   template<class T>
-  void DoubleLinkedList<T>::printList() {
+  void DoubleLinkedList<T>::printList() { // time complexity o(n)
     Node<T> *ptr = head;
     while (ptr != NULL) {
         std::cout << ptr->data << " ";
@@ -69,7 +70,7 @@
   }
 
   template<class T>
-  void DoubleLinkedList<T>::addFirst(T value) {
+  void DoubleLinkedList<T>::addFirst(T value) { // time complexity o(1)
     Node<T> *newNode = new Node<T>(value);
     // Si la lista esta vacia 
     if (head == NULL) {
@@ -85,7 +86,7 @@
   }
   
   template<class T>
-  void DoubleLinkedList<T>::addLast(T value) {
+  void DoubleLinkedList<T>::addLast(T value) { // time complexity o(1)
     // La lista esta vacia
     if (head == NULL) {
       addFirst(value);
@@ -100,7 +101,7 @@
   }
 
   template<class T>
-  void DoubleLinkedList<T>::updateData(T val, T newVal) {
+  void DoubleLinkedList<T>::updateData(T val, T newVal) { //time complexity o(n)
 
     Node<T> *p;
     p = head;
@@ -119,7 +120,7 @@
   }
   
   template<class T>
-  bool DoubleLinkedList<T>::deleteData(T value) {
+  bool DoubleLinkedList<T>::deleteData(T value) { // Time complexity o(n)
     Node<T> *p, *q;
     p = head;
     q = NULL;
@@ -159,7 +160,7 @@
   }
 
   template<class T>
-  bool DoubleLinkedList<T>::deleteAt(int position) {
+  bool DoubleLinkedList<T>::deleteAt(int position) { // Time complexity o(n)
     if (position < 0 || position >= numElements) {
       std::cout << "Indice fuera de rango" << std::endl;
       return false;
@@ -203,7 +204,7 @@
   }
   
   template<class T>
-  T DoubleLinkedList<T>::getData(int position) {
+  T DoubleLinkedList<T>::getData(int position) { // O(n)
     if (position < 0 || position >= numElements) {
       std::cout << "Indice fuera de rango" << std::endl;
       return -1;
@@ -224,12 +225,14 @@
   }
 
   template<class T>
-  void DoubleLinkedList<T>::clear(){
-      Node<T> *ptr = head;
-      
-      while (ptr != NULL) {
-          ptr = NULL;
-          ptr = ptr->next;
+  void DoubleLinkedList<T>::clear(){ // O(n)
+    
+    int i = 0;
+    int range = getNumElements();
+
+    while (i < range) { 
+      deleteAt(0);
+      i++;
     }
   }
 
@@ -242,7 +245,7 @@
     if (this->head == NULL) {
       return;
     } else {
-      for (current = head; current->next != NULL; current = current->next){
+      for (current = head; current->next != NULL; current = current->next){ // O(n^2)
         for (idx = current; idx != NULL; idx = idx->next){
           if (current->data > idx->data) {
             temp = current->data;
@@ -260,7 +263,7 @@
     
     int limit = getNumElements();
 
-    for (int i = 0; i < limit; i++) {
+    for (int i = 0; i < limit; i++) { // Time complexity O(n)
       addLast(getData(i));
     }
 
@@ -269,37 +272,14 @@
 template <class T>
 void DoubleLinkedList<T>::removeDuplicates() {
 
-  if (this->head != nullptr) {
+  std::vector<T> indices;
 
-    Node<T> *current = this->head;
-    Node<T> *temp = nullptr;
-    Node<T> *target = nullptr;
-
-    while (current != nullptr) {
-      temp = current->next;
-      while(temp != nullptr) {
-        if (temp->data == current->data) {
-          target = temp;
-        }
-        temp = temp->next;
-        if (target != nullptr) {
-          if (target->prev != nullptr) {
-            target->prev->next = temp;
-          }
-          if (temp != nullptr) {
-            temp->prev = target->prev;
-          }
-          if (target == this->tail) {
-            this->tail = target->prev;
-          }
-          target->prev = nullptr;
-          target->next = nullptr;
-          target = nullptr;
-        }
+  for (int i = 0; i < getNumElements(); i++){ // Time complexity O(n^2)
+    for (int j = 1; j < getNumElements(); j++) {
+      if (this->getData(i) == this->getData(j)) {
+        deleteAt(j);
       }
-      current = current->next;
     }
-
   }
 
 }
@@ -309,7 +289,7 @@ void DoubleLinkedList<T>::removeDuplicates() {
 
     DoubleLinkedList<T> newList;
 
-    while (left != right + 1) {
+    while (left != right + 1) { // Time complexity O(n)
       T value = getData(left);
       newList.addFirst(value);
       left++;
