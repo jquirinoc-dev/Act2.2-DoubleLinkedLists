@@ -3,6 +3,7 @@
 
   #include <climits>
   #include "Node.h"
+  #include "mergeSort.h"
 
   template <class T>
   class DoubleLinkedList {
@@ -18,12 +19,15 @@
         void printList();
         void addFirst(T value);
         void addLast(T value);
+        void updateData(T val, T newVal);
         bool deleteData(T value);
         bool deleteAt(int position);
         T getData(int position);
         void clear();
         void sort();
         void duplicate();
+        void removeDuplicates();
+        DoubleLinkedList<T> getReversedSubList(int left, int right);
           
   };
 
@@ -93,6 +97,25 @@
       tail = newNode;
       numElements++;
     }    
+  }
+
+  template<class T>
+  void DoubleLinkedList<T>::updateData(T val, T newVal) {
+
+    Node<T> *p;
+    p = head;
+    if (p != NULL && p->data == val) {
+      p->data = newVal;
+    } else {
+      while (p != NULL && p->data != newVal) {
+        p = p->next;
+      }
+      if (p == NULL){
+        std::cout << "Index fuera de rango." << std::endl;
+      } else {
+        p->data = newVal;
+      }
+    }
   }
   
   template<class T>
@@ -211,10 +234,87 @@
   }
 
   template<class T>
-  void DoubleLinkedList<T>::duplicate() {
-      for (int i = 0; i < getNumElements(); i++) {
-        addLast(head<i>);
+  void DoubleLinkedList<T>::sort() {
+
+    Node<T> *current = NULL, *idx = NULL;
+    T temp;
+
+    if (this->head == NULL) {
+      return;
+    } else {
+      for (current = head; current->next != NULL; current = current->next){
+        for (idx = current; idx != NULL; idx = idx->next){
+          if (current->data > idx->data) {
+            temp = current->data;
+            current->data = idx->data;
+            idx->data = temp;
+          }
+        }
       }
+    }
+
+  }
+
+  template<class T>
+  void DoubleLinkedList<T>::duplicate() {
+    
+    int limit = getNumElements();
+
+    for (int i = 0; i < limit; i++) {
+      addLast(getData(i));
+    }
+
+  }
+
+template <class T>
+void DoubleLinkedList<T>::removeDuplicates() {
+
+  if (this->head != nullptr) {
+
+    Node<T> *current = this->head;
+    Node<T> *temp = nullptr;
+    Node<T> *target = nullptr;
+
+    while (current != nullptr) {
+      temp = current->next;
+      while(temp != nullptr) {
+        if (temp->data == current->data) {
+          target = temp;
+        }
+        temp = temp->next;
+        if (target != nullptr) {
+          if (target->prev != nullptr) {
+            target->prev->next = temp;
+          }
+          if (temp != nullptr) {
+            temp->prev = target->prev;
+          }
+          if (target == this->tail) {
+            this->tail = target->prev;
+          }
+          target->prev = nullptr;
+          target->next = nullptr;
+          target = nullptr;
+        }
+      }
+      current = current->next;
+    }
+
+  }
+
+}
+
+  template <class T>
+  DoubleLinkedList<T> DoubleLinkedList<T>::getReversedSubList(int left, int right) {
+
+    DoubleLinkedList<T> newList;
+
+    while (left != right + 1) {
+      T value = getData(left);
+      newList.addFirst(value);
+      left++;
+    }
+    return newList;
   }
   
 #endif // _DOUBLELINKEDLIST_H_
