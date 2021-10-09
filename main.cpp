@@ -1,3 +1,9 @@
+/*
+Juan Pablo Pérez Durán | A01639947
+Jonathan Joaquín Quirino Carrasco | A01640100
+*/
+
+
 #include <iostream>
 #include "DoubleLinkedList.h"
 
